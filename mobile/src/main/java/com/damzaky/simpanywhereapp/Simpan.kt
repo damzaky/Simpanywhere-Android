@@ -3,11 +3,15 @@ package com.damzaky.simpanywhereapp
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.android.volley.AuthFailureError
+
+
 
 class Simpan : AppCompatActivity() {
 
@@ -16,24 +20,33 @@ class Simpan : AppCompatActivity() {
         setContentView(R.layout.activity_simpan)
 
         val textView = findViewById<TextView>(R.id.text)
-// ...
-
-// Instantiate the RequestQueue.
         val queue = Volley.newRequestQueue(this)
         val url = "https://simpanywhere.appspot.com/post"
         val submit = findViewById<Button>(R.id.submit)
-// Request a string response from the provided URL.
-        val stringRequest = StringRequest(
+        val password = findViewById<EditText>(R.id.password)
+        val data = findViewById<EditText>(R.id.data)
+
+        val stringRequest = object:StringRequest(
             Request.Method.POST, url,
             Response.Listener<String> { response ->
-                // Display the first 500 characters of the response string.
-                textView.text = "Response is: ${response.substring(0, 500)}"
+                textView.text = "Response is: ${response}"
             },
-            Response.ErrorListener { textView.text = "That didn't work!" })
+            Response.ErrorListener { textView.text = "Hmm something is wrong!" }) {
+
+            override fun getBodyContentType(): String {
+                return "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["data"] = data.getText().toString().trim()
+                params["pass"] = password.getText().toString().trim()
+                return params
+            }
+        }
         submit.setOnClickListener { view ->
             queue.add(stringRequest)
         }
-// Add the request to the RequestQueue.
-//        queue.add(stringRequest)
     }
 }

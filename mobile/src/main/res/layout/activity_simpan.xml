@@ -49,7 +49,7 @@
                         android:inputType="textMultiLine"
                         android:ems="10"
                         tools:layout_editor_absoluteY="16dp" tools:layout_editor_absoluteX="16dp"
-                        android:id="@+id/editText"
+                        android:id="@+id/data"
                         android:hint="message" android:padding="15dp"/>
             </LinearLayout>
         </ScrollView>
